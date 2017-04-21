@@ -1,5 +1,7 @@
 # MariaDB 10.2 Docker
 
+<small>**Latest build:** 2017-04-21</small>
+
 [![Build Status](https://travis-ci.org/cytopia/docker-mariadb-10.2.svg?branch=master)](https://travis-ci.org/cytopia/docker-mariadb-10.2) [![](https://images.microbadger.com/badges/version/cytopia/mariadb-10.2.svg)](https://microbadger.com/images/cytopia/mariadb-10.2 "mariadb-10.2") [![](https://images.microbadger.com/badges/image/cytopia/mariadb-10.2.svg)](https://microbadger.com/images/cytopia/mariadb-10.2 "mariadb-10.2") [![](https://images.microbadger.com/badges/license/cytopia/mariadb-10.2.svg)](https://microbadger.com/images/cytopia/mariadb-10.2 "mariadb-10.2")
 
 [![cytopia/mariadb-10.2](http://dockeri.co/image/cytopia/mariadb-10.2)](https://hub.docker.com/r/cytopia/mariadb-10.2/)
@@ -113,6 +115,12 @@ Configuration files inside this docker are read in the following order:
 | Order | File | Description |
 |-------|------|-------------|
 | 1     | `/etc/my.cnf` | Operating system default |
-| 2     | `/etc/mysql/my.cnf` | Operating system default |
-| 3     | `/etc/mysql/docker-default.d/*.cnf` | Alters additional settings via this dockers optional environmental variables (`socket` and `general_log`) |
-| 4     | `/etc/mysql/conf.d/` | Can be mounted to provide custom `*.cnf` files which can overwrite anything of the above. |
+| 2     | `/etc/mysql/conf.d/` | Custom configuration (level 1). Can be mounted to provide custom `*.cnf` files which can overwrite anything of the above. (used by the devilbox for its base configuration) |
+| 3     | `/etc/mysql/docker-default.d/*.cnf` | Custom configuration (level 2). Can be mounted to provide custom `*.cnf` files which can overwrite anything of the above. (used by the devilbox to allow custom user-defined configuration overwriting the default devilbox settings. |
+
+
+## Modules
+
+**[Version]**
+
+mysqld  Ver 10.2.5-MariaDB for Linux on x86_64 (MariaDB Server)

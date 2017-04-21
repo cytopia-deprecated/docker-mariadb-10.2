@@ -57,6 +57,13 @@ install:
   - docker build -t cytopia/${MY_DOCKER_NAME} .
 
 
+before_script:
+
+  # Disable services enabled by default
+  # http://docs.travis-ci.com/user/database-setup/#MySQL
+  - sudo /etc/init.d/mysql stop
+  - sudo /etc/init.d/postgresql stop
+
 
 ###
 ### Test
@@ -108,7 +115,6 @@ script:
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
-
 
 
   ################################################################################
@@ -175,7 +181,6 @@ script:
   - docker rm "${MY_DOCKER_NAME}"
 
 
-
   ################################################################################
   ## 03.) [a](DEBUG) With config overwrite
   ################################################################################
@@ -236,7 +241,6 @@ script:
   - rm -f /tmp/mysql-conf/buffer.cnf
 
 
-
   ################################################################################
   ## 04.) [a](DEBUG) Change socket path
   ################################################################################
@@ -289,7 +293,6 @@ script:
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
-
 
 
   ################################################################################
@@ -370,3 +373,25 @@ script:
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
+
+
+  ################################################################################
+  ## 06.) Test on devilbox
+  ################################################################################
+  - /tmp/section.sh "06.) Test on devilbox"
+  - git clone -v https://github.com/cytopia/devilbox
+  - cd devilbox
+  - cp env-example .env
+  - sed -i'' 's/^MYSQL_SERVER=/#MYSQL_SERVER=/g' .env
+  - echo "MYSQL_SERVER=${MY_DOCKER_NAME}" >> .env
+  - docker-compose up -d
+  - sleep 30
+  - docker-compose logs
+  - docker-compose ps
+  - _broken="$( docker-compose ps | grep -c 'Exit' || true )"
+  - _running="$( docker-compose ps | grep -c 'Up' )"
+  - _total="$( docker-compose ps -q | grep -c '' )"
+  - if [ "${_broken}" != "0" ]; then false; fi
+  - if [ "${_running}" != "${_total}" ]; then false; fi
+  - _count="$( curl -q localhost 2>/dev/null | grep -c OK )"
+  - if [ "${_count}" != "4" ]; then false; fi
