@@ -13,7 +13,7 @@ LABEL \
 	image="mariadb-10.2" \
 	vendor="cytopia" \
 	license="MIT" \
-	build-date="2017-08-30"
+	build-date="2017-09-29"
 
 
 ###
@@ -147,7 +147,7 @@ VOLUME /var/lib/mysql
 VOLUME /var/log/mysql
 VOLUME /var/sock/mysqld
 VOLUME /etc/mysql/conf.d
-VOLUME etc/mysql/docker-default.d
+VOLUME /etc/mysql/docker-default.d
 
 
 ##
